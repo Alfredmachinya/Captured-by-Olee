@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Captured by Olee | Photography</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background-color: #0a0a0a;
+        color: #f5f5f5;
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+
+      /* Logo and Navigation */
+      header {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+        padding: 20px 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: rgba(10, 10, 10, 0.95);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .logo-container {
+        display: flex;
+        align-items: center;
+        z-index: 1001;
+      }
+
+      .logo-img {
+        width: 50px;
+        height: 50px;
+        margin-right: 15px;
+        border-radius: 12px;
+        object-fit: cover;
+        border: 2px solid rgba(212, 175, 55, 0.3);
+      }
+
+      .logo-text {
+        font-size: 24px;
+        font-weight: 300;
+        letter-spacing: 2px;
+      }
+
+      .logo-text span {
+        font-weight: 600;
+        color: #d4af37;
+      }
+
+      /* Desktop Navigation */
+      .desktop-nav ul {
+        display: flex;
+        list-style: none;
+      }
+
+      .desktop-nav li {
+        margin-left: 30px;
+      }
+
+      .desktop-nav a {
+        color: #f5f5f5;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: 300;
+        letter-spacing: 1px;
+        transition: color 0.3s ease;
+        position: relative;
+      }
+
+      .desktop-nav a:hover {
+        color: #d4af37;
+      }
+
+      .desktop-nav a.active {
+        color: #d4af37;
+      }
+
+      .desktop-nav a.active::after {
+        width: 100%;
+      }
+
+      .desktop-nav a::after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: -5px;
+        left: 0;
+        background-color: #d4af37;
+        transition: width 0.3s ease;
+      }
+
+      .desktop-nav a:hover::after {
+        width: 100%;
+      }
+
+      /* Mobile Menu Button */
+      .menu-toggle {
+        display: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        z-index: 1001;
+      }
+
+      .menu-toggle span {
+        display: block;
+        width: 25px;
+        height: 2px;
+        background-color: #f5f5f5;
+        margin: 5px 0;
+        transition: 0.3s;
+      }
+
+      /* Mobile Navigation */
+      .mobile-nav {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        max-width: 300px;
+        height: 100vh;
+        background-color: rgba(10, 10, 10, 0.98);
+        backdrop-filter: blur(15px);
+        padding: 80px 30px 30px;
+        transition: right 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
+        z-index: 999;
+        border-left: 1px solid rgba(212, 175, 55, 0.2);
+        box-shadow: -5px 0 30px rgba(0, 0, 0, 0.5);
+      }
+
+      .mobile-nav.active {
+        right: 0;
+      }
+
+      .mobile-nav ul {
+        list-style: none;
+      }
+
+      .mobile-nav li {
+        margin-bottom: 25px;
+        opacity: 0;
+        transform: translateX(20px);
+        transition: all 0.4s ease;
+      }
+
+      .mobile-nav.active li {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      .mobile-nav li:nth-child(1) {
+        transition-delay: 0.1s;
+      }
+      .mobile-nav li:nth-child(2) {
+        transition-delay: 0.2s;
+      }
+      .mobile-nav li:nth-child(3) {
+        transition-delay: 0.3s;
+      }
+      .mobile-nav li:nth-child(4) {
+        transition-delay: 0.4s;
+      }
+
+      .mobile-nav a {
+        color: #f5f5f5;
+        text-decoration: none;
+        font-size: 20px;
+        font-weight: 300;
+        letter-spacing: 2px;
+        display: block;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.3s ease;
+      }
+
+      .mobile-nav a:hover,
+      .mobile-nav a.active {
+        color: #d4af37;
+        padding-left: 10px;
+        border-bottom-color: rgba(212, 175, 55, 0.3);
+      }
+
+      /* Overlay for mobile menu */
+      .menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 998;
+      }
+
+      .menu-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      /* Menu Toggle Animation */
+      .menu-toggle.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+      }
+
+      .menu-toggle.active span:nth-child(2) {
+        opacity: 0;
+      }
+
+      .menu-toggle.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -6px);
+      }
+
+      /* Hero Section */
+      .hero {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 0 20px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("https://images.unsplash.com/photo-1542038784456-1ea8e935640e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80");
+        background-size: cover;
+        background-position: center;
+        opacity: 0.4;
+        z-index: -1;
+      }
+
+      .hero-title {
+        font-size: 4.5rem;
+        font-weight: 300;
+        letter-spacing: 8px;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+      }
+
+      .hero-title span {
+        font-weight: 600;
+        color: #d4af37;
+      }
+
+      .hero-subtitle {
+        font-size: 1.2rem;
+        font-weight: 300;
+        letter-spacing: 3px;
+        margin-bottom: 40px;
+        max-width: 600px;
+      }
+
+      .cta-button {
+        display: inline-block;
+        padding: 15px 40px;
+        background-color: transparent;
+        color: #f5f5f5;
+        border: 1px solid #d4af37;
+        text-decoration: none;
+        font-size: 16px;
+        letter-spacing: 2px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .cta-button:hover {
+        background-color: rgba(212, 175, 55, 0.1);
+        letter-spacing: 3px;
+      }
+
+      /* Video Section */
+      .video-section {
+        padding: 100px 40px;
+        text-align: center;
+      }
+
+      .section-title {
+        font-size: 2.5rem;
+        font-weight: 300;
+        letter-spacing: 4px;
+        margin-bottom: 60px;
+        text-transform: uppercase;
+        position: relative;
+        display: inline-block;
+      }
+
+      .section-title::after {
+        content: "";
+        position: absolute;
+        width: 50%;
+        height: 1px;
+        background-color: #d4af37;
+        bottom: -10px;
+        left: 25%;
+      }
+
+      .video-container {
+        max-width: 900px;
+        margin: 0 auto;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      }
+
+      .video-wrapper {
+        position: relative;
+        padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+        height: 0;
+        overflow: hidden;
+      }
+
+      .video-wrapper iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+
+      .video-caption {
+        margin-top: 30px;
+        font-size: 1.1rem;
+        color: #aaa;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.8;
+      }
+
+      /* Gallery Section */
+      .gallery-section {
+        padding: 100px 40px;
+        text-align: center;
+        background-color: #050505;
+      }
+
+      .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .gallery-item {
+        height: 400px;
+        overflow: hidden;
+        position: relative;
+        cursor: pointer;
+        border-radius: 8px;
+      }
+
+      .gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+      }
+
+      .gallery-item:hover img {
+        transform: scale(1.05);
+      }
+
+      .gallery-item-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 20px;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+        transform: translateY(20px);
+        opacity: 0;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+      }
+
+      .gallery-item:hover .gallery-item-overlay {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      /* Footer */
+      footer {
+        padding: 60px 40px 30px;
+        background-color: #050505;
+        text-align: center;
+      }
+
+      .footer-logo {
+        font-size: 2rem;
+        font-weight: 300;
+        letter-spacing: 4px;
+        margin-bottom: 30px;
+      }
+
+      .footer-logo span {
+        font-weight: 600;
+        color: #d4af37;
+      }
+
+      .social-links {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+        gap: 15px;
+      }
+
+      .social-link {
+        color: #f5f5f5;
+        font-size: 20px;
+        transition: all 0.3s ease;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(255, 255, 255, 0.05);
+        text-decoration: none;
+      }
+
+      .social-link:hover {
+        color: #d4af37;
+        background-color: rgba(212, 175, 55, 0.1);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2);
+      }
+
+      .whatsapp-icon {
+        font-size: 22px;
+      }
+
+      .email-icon {
+        font-size: 20px;
+      }
+
+      .copyright {
+        font-size: 14px;
+        color: #888;
+        margin-top: 30px;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        padding-top: 30px;
+      }
+
+      /* Mobile Responsive */
+      @media (max-width: 1024px) {
+        .hero-title {
+          font-size: 3.5rem;
+          letter-spacing: 6px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        header {
+          padding: 15px 20px;
+        }
+
+        .logo-text {
+          font-size: 20px;
+        }
+
+        .desktop-nav {
+          display: none;
+        }
+
+        .menu-toggle {
+          display: block;
+        }
+
+        .hero-title {
+          font-size: 2.5rem;
+          letter-spacing: 4px;
+        }
+
+        .hero-subtitle {
+          font-size: 1rem;
+          letter-spacing: 2px;
+        }
+
+        .video-section {
+          padding: 80px 20px;
+        }
+
+        .section-title {
+          font-size: 1.8rem;
+        }
+
+        .gallery-section {
+          padding: 80px 20px;
+        }
+
+        .gallery-grid {
+          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+          gap: 15px;
+        }
+
+        .gallery-item {
+          height: 300px;
+        }
+
+        .social-link {
+          width: 45px;
+          height: 45px;
+          font-size: 18px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .hero-title {
+          font-size: 2rem;
+          letter-spacing: 3px;
+        }
+
+        .hero-subtitle {
+          font-size: 0.9rem;
+          letter-spacing: 1px;
+          padding: 0 10px;
+        }
+
+        .video-section {
+          padding: 60px 15px;
+        }
+
+        .gallery-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .social-links {
+          gap: 10px;
+        }
+
+        .social-link {
+          width: 40px;
+          height: 40px;
+          font-size: 16px;
+        }
+
+        .mobile-nav {
+          width: 85%;
+        }
+
+        .mobile-nav a {
+          font-size: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header with Logo -->
+    <header>
+      <div class="logo-container">
+        <a href="index.html">
+          <img
+            src="media/logos/logo-Oli.jpg"
+            alt="Captured by Olee Logo"
+            class="logo-img"
+          />
+        </a>
+        <div class="logo-text">CAPTURED <span>by Olee</span></div>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <nav class="desktop-nav">
+        <ul>
+          <li><a href="index.html" class="active">Home</a></li>
+          <li><a href="showcase.html">Showcase</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="order.html">Order</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+
+      <!-- Mobile Menu Button -->
+      <button class="menu-toggle" id="mobileMenuToggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <!-- Mobile Navigation Overlay -->
+      <div class="menu-overlay" id="menuOverlay"></div>
+
+      <!-- Mobile Navigation -->
+      <nav class="mobile-nav" id="mobileNav">
+        <ul>
+          <li><a href="index.html" class="mobile-nav-link active">Home</a></li>
+          <li><a href="showcase.html" class="mobile-nav-link">Showcase</a></li>
+          <li><a href="gallery.html" class="mobile-nav-link">Gallery</a></li>
+          <li><a href="order.html" class="mobile-nav-link">Order</a></li>
+          <li><a href="contact.html" class="mobile-nav-link">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+      <div class="hero-bg"></div>
+      <h1 class="hero-title">Captured <span>by Olee</span></h1>
+      <p class="hero-subtitle">
+        Moments frozen in time, stories told through the lens
+      </p>
+      <a href="#video" class="cta-button">View Showcase</a>
+    </section>
+
+    <!-- Video Section -->
+    <section class="video-section" id="video">
+      <h2 class="section-title">Showcase Reel</h2>
+
+      <div class="video-container">
+        <div class="video-wrapper">
+          <iframe
+            src="https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2F61578843325332%2Fvideos%2F1410369440792991%2F&show_text=true&width=560&t=0"
+            width="560"
+            height="429"
+            style="border: none; overflow: hidden"
+            scrolling="no"
+            frameborder="0"
+            allowfullscreen="true"
+            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+          ></iframe>
+        </div>
+      </div>
+
+      <p class="video-caption">
+        Experience the artistry behind each photograph. This showcase reel
+        captures the essence of my work - from breathtaking landscapes to
+        intimate portraits, each frame tells a unique story.
+      </p>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="gallery-section" id="gallery">
+      <h2 class="section-title">Recent Work</h2>
+      <div class="gallery-grid">
+        <div class="gallery-item">
+          <img src="media/images/canvas1.jpg" alt="Canvas Art" />
+          <div class="gallery-item-overlay">
+            <h3>Canvas Art</h3>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <img src="media/images/canvas2.jpg" alt="Canvas Print" />
+          <div class="gallery-item-overlay">
+            <h3>Canvas Prints</h3>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <img src="media/images/nature1.jpg" alt="Nature Photography" />
+          <div class="gallery-item-overlay">
+            <h3>Nature</h3>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <img src="media/images/nature4.jpg" alt="Landscape Photography" />
+          <div class="gallery-item-overlay">
+            <h3>Landscapes</h3>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <img src="media/images/nature2.jpg" alt="Nature Photography" />
+          <div class="gallery-item-overlay">
+            <h3>Nature</h3>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <img src="media/images/creativity1.jpg" alt="Creative Photography" />
+          <div class="gallery-item-overlay">
+            <h3>Creative</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+      <div class="footer-logo">CAPTURED <span>by Olee</span></div>
+      <p>
+        I sell atmosphere, identity and calm - not just pictures | Canvas prints
+        available 🖼
+      </p>
+
+      <div class="social-links">
+        <a href="#" class="social-link" target="_blank">
+          <i class="fab fa-instagram"></i>
+        </a>
+        <a
+          href="https://www.facebook.com/profile.php?id=61578843325332"
+          class="social-link"
+          target="_blank"
+        >
+          <i class="fab fa-facebook-f"></i>
+        </a>
+        <a href="https://wa.me/26773815955" class="social-link" target="_blank">
+          <i class="fab fa-whatsapp whatsapp-icon"></i>
+        </a>
+        <a
+          href="mailto:tshosaole@gmail.com"
+          class="social-link"
+          target="_blank"
+        >
+          <i class="fas fa-envelope email-icon"></i>
+        </a>
+      </div>
+
+      <div class="copyright">
+        <p>&copy; 2024 Captured by Olee. All rights reserved.</p>
+        <p>Based in Botswana | Available worldwide</p>
+        <p style="margin-top: 10px; font-size: 13px; color: #aaa">
+          Email:
+          <a href="mailto:tshosaole@gmail.com" style="color: #d4af37"
+            >tshosaole@gmail.com</a
+          >
+          | WhatsApp:
+          <a href="https://wa.me/26773815955" style="color: #d4af37"
+            >+267 73 815 955</a
+          >
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      // Set active page based on current URL
+      function setActivePage() {
+        const currentPage =
+          window.location.pathname.split("/").pop() || "index.html";
+        const navLinks = document.querySelectorAll(
+          ".desktop-nav a, .mobile-nav a"
+        );
+
+        navLinks.forEach((link) => {
+          const linkPage = link.getAttribute("href");
+          if (linkPage === currentPage) {
+            link.classList.add("active");
+          } else {
+            link.classList.remove("active");
+          }
+        });
+      }
+
+      // Mobile Menu Functionality
+      const mobileMenuToggle = document.getElementById("mobileMenuToggle");
+      const mobileNav = document.getElementById("mobileNav");
+      const menuOverlay = document.getElementById("menuOverlay");
+      const mobileNavLinks = document.querySelectorAll(".mobile-nav-link");
+
+      // Toggle mobile menu
+      mobileMenuToggle.addEventListener("click", function () {
+        this.classList.toggle("active");
+        mobileNav.classList.toggle("active");
+        menuOverlay.classList.toggle("active");
+        document.body.style.overflow = mobileNav.classList.contains("active")
+          ? "hidden"
+          : "";
+      });
+
+      // Close menu when clicking overlay
+      menuOverlay.addEventListener("click", function () {
+        mobileMenuToggle.classList.remove("active");
+        mobileNav.classList.remove("active");
+        this.classList.remove("active");
+        document.body.style.overflow = "";
+      });
+
+      // Close menu when clicking a link
+      mobileNavLinks.forEach((link) => {
+        link.addEventListener("click", function () {
+          mobileMenuToggle.classList.remove("active");
+          mobileNav.classList.remove("active");
+          menuOverlay.classList.remove("active");
+          document.body.style.overflow = "";
+
+          // Allow normal navigation
+          const href = this.getAttribute("href");
+          if (href && href !== "#") {
+            window.location.href = href;
+          }
+        });
+      });
+
+      // Smooth scrolling for anchor links on current page only
+      document.querySelectorAll("a[href^='#']").forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          const href = this.getAttribute("href");
+
+          // Only prevent default if it's an anchor link on the same page
+          if (
+            href.startsWith("#") &&
+            window.location.pathname.endsWith("index.html")
+          ) {
+            e.preventDefault();
+
+            const targetId = href;
+            if (targetId === "#home") {
+              window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+              });
+            } else {
+              const targetElement = document.querySelector(targetId);
+              if (targetElement) {
+                window.scrollTo({
+                  top: targetElement.offsetTop - 80,
+                  behavior: "smooth",
+                });
+              }
+            }
+          }
+          // For other links (like showcase.html, gallery.html, contact.html), allow normal navigation
+        });
+      });
+
+      // CTA button smooth scroll (only on index.html)
+      const ctaButton = document.querySelector(".cta-button");
+      if (ctaButton && window.location.pathname.endsWith("index.html")) {
+        ctaButton.addEventListener("click", function (e) {
+          e.preventDefault();
+          const targetElement = document.querySelector(
+            this.getAttribute("href")
+          );
+          if (targetElement) {
+            window.scrollTo({
+              top: targetElement.offsetTop - 80,
+              behavior: "smooth",
+            });
+          }
+        });
+      }
+
+      // Close mobile menu on window resize (if resized to desktop)
+      window.addEventListener("resize", function () {
+        if (window.innerWidth > 768) {
+          mobileMenuToggle.classList.remove("active");
+          mobileNav.classList.remove("active");
+          menuOverlay.classList.remove("active");
+          document.body.style.overflow = "";
+        }
+      });
+
+      // Set active page on load
+      document.addEventListener("DOMContentLoaded", function () {
+        setActivePage();
+
+        // Add click tracking for social links (optional)
+        document.querySelectorAll(".social-link").forEach((link) => {
+          link.addEventListener("click", function (e) {
+            console.log("Social link clicked:", this.href);
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
